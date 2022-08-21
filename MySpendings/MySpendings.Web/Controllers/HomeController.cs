@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MySpendings.Models;
 using System.Diagnostics;
 
@@ -13,6 +14,7 @@ namespace MySpendings.Web.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();

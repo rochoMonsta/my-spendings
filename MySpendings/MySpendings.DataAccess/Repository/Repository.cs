@@ -13,6 +13,7 @@ namespace MySpendings.DataAccess.Repository
         public Repository(ApplicationDBContext context)
         {
             _context = context;
+            _dbSet = _context.Set<T>();
         }
 
         public async Task AddAsync(T entity)

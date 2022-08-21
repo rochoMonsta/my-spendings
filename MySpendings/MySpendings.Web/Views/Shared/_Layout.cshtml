@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MySpendings.Web</title>
+    <title>@ViewData["Title"] - MySpendings</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/bootswatchTheme.css"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
@@ -22,18 +22,23 @@
                 <div class="collapse navbar-collapse" id="navbarColor02">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Content Management</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="CoverType" asp-action="Index">Cover Type</a>
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Authorization" asp-action="Index" class="nav-link text-end"><i class="bi bi-person-circle"></i> &nbsp; Login/Registation</a>
+                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                 <i class="bi bi-person"></i> &nbsp; @(string.IsNullOrWhiteSpace(User.Identity.Name) ? "Account" : User.Identity.Name)
+                             </a>
+                             <div class="dropdown-menu">
+                                 @{
+                                     if (string.IsNullOrWhiteSpace(User.Identity.Name))
+                                     {
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="bi bi-person-check-fill"></i> &nbsp; Sign in</a>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus-fill"></i> &nbsp; Sign up</a>
+                                     }else{
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Logout"><i class="bi bi-person-dash-fill"></i> &nbsp; Logout</a>
+                                     }
+                                 }
+                             </div> 
                         </li>
                     </ul>
                 </div>
