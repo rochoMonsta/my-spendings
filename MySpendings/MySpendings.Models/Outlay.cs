@@ -9,7 +9,7 @@ namespace MySpendings.Models
         public string Name { get; set; }
         [Range(0, 1000000)]
         public float Cost { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Display(Name = "Date")]
         public DateTimeOffset CreatedDate { get; set; }

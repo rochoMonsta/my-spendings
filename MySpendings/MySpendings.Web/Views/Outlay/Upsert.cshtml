@@ -19,7 +19,7 @@
             <select asp-for="@Model.Outlay.CategoryId" asp-items="@Model.Categories" class="form-select">
                 <option disabled selected>--Select Cover Type--</option>
             </select>
-            <span asp-validation-for="@Model.Outlay.Description" class="text-danger"></span>
+            <span asp-validation-for="@Model.Outlay.CategoryId" class="text-danger"></span>
         </div>
 
         <div class="mb-3 col-6">
