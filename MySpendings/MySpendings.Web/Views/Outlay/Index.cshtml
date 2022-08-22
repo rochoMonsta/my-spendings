@@ -43,10 +43,14 @@
                        <a asp-controller="Outlay" asp-action="Upsert" asp-route-id="@outlay.Id" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> &nbsp; Edit</a>
                     </td>
                     <td width="20%" class="text-center">
-                        <a onclick="Delete('/Category/Delete?id=@outlay.Id')" class="btn btn-danger mx-2"><i class="bi bi-trash"></i> &nbsp; Delete</a>
+                        <a onclick="Delete('/Outlay/Delete?id=@outlay.Id')" class="btn btn-danger mx-2"><i class="bi bi-trash"></i> &nbsp; Delete</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+@section Scripts{
+    <script src="~/js/outlaysHelper.js"></script>
+}

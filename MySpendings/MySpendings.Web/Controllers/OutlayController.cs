@@ -62,7 +62,7 @@ namespace MySpendings.Web.Controllers
 
                 outlayViewModel.Outlay.UserId = currentUser.Id;
 
-                TempData["Success"] = outlayViewModel.Outlay.Id == 0 ? "Category created seccessfully" : "Category edited seccessfully";
+                TempData["Success"] = outlayViewModel.Outlay.Id == 0 ? "Outlay created seccessfully" : "Outlay edited seccessfully";
 
                 if (outlayViewModel.Outlay.Id == 0)
                     await _unitOfWork.Outlay.AddAsync(outlayViewModel.Outlay);
@@ -94,6 +94,19 @@ namespace MySpendings.Web.Controllers
         {
             var categories = await _unitOfWork.Category.GetAllAsync();
             outlayViewModel.Categories = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+        }
+        #endregion
+        #region API CALLS
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var outlay = await _unitOfWork.Outlay.GetFirstOrDefaultAsync(o => o.Id == id);
+            if (outlay == null)
+                return Json(new { success = false, message = "Error while deleting" });
+
+            _unitOfWork.Outlay.Remove(outlay);
+            await _unitOfWork.SaveAsync();
+            return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion
     }
