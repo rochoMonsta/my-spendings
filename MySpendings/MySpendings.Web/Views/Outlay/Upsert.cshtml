@@ -1,0 +1,65 @@
+﻿@model OutlayViewModel
+
+<form method="post">
+    <input asp-for="@Model.Outlay.Id" hidden />
+    <div class="border p-3 mt-4 row">
+        <div class="row pb-2">
+            <h2 class="text-primary">@(Model.Outlay.Id == 0 ? "Create Outlay" : "Edit Outlay")</h2>
+            <hr/>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Outlay.Name"></label>
+            <input asp-for="@Model.Outlay.Name" class="form-control"/>
+            <span asp-validation-for="@Model.Outlay.Name" class="text-danger"></span>
+        </div>
+
+         <div class="mb-3">
+            <label asp-for="@Model.Outlay.CategoryId"></label>
+            <select asp-for="@Model.Outlay.CategoryId" asp-items="@Model.Categories" class="form-select">
+                <option disabled selected>--Select Cover Type--</option>
+            </select>
+            <span asp-validation-for="@Model.Outlay.Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="@Model.Outlay.Cost"></label>
+            <input type="number" asp-for="@Model.Outlay.Cost" class="form-control"/>
+            <span asp-validation-for="@Model.Outlay.Cost" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="@Model.Outlay.CreatedDate"></label>
+            <input type="date" min="@Model.MinDate" max="@Model.MaxDate" asp-for="@Model.Outlay.CreatedDate" class="form-control"/>
+            <span asp-validation-for="@Model.Outlay.CreatedDate" class="text-danger"></span>
+        </div>
+
+       <div class="mb-3">
+           <label asp-for="@Model.Outlay.Description"></label>
+           <textarea asp-for="@Model.Outlay.Description" rows="3" class="form-control"></textarea>
+           <span asp-validation-for="@Model.Outlay.Description" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary" style="width:150px">@(Model.Outlay.Id == 0 ? "Create" : "Update")</button>
+            <a asp-controller="Outlay" asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script type="text/javascript">
+        tinymce.init({
+              selector: 'textarea',
+              plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
+              toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
+              toolbar_mode: 'floating',
+              tinycomments_mode: 'embedded',
+              tinycomments_author: 'Author name',
+            });
+    </script>
+}

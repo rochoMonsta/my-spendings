@@ -12,8 +12,8 @@ using MySpendings.DataAccess.Data;
 namespace MySpendings.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20220818094750_AddedCategoryAndOutlayModelsWithConfigurations")]
-    partial class AddedCategoryAndOutlayModelsWithConfigurations
+    [Migration("20220822162140_AddedCategoryUserOutlayModels")]
+    partial class AddedCategoryUserOutlayModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,13 +63,21 @@ namespace MySpendings.DataAccess.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

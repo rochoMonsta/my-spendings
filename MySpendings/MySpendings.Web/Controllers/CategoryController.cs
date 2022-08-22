@@ -21,6 +21,7 @@ namespace MySpendings.Web.Controllers
             return View(categories);
         }
 
+        [Authorize]
         public async Task<IActionResult> Upsert(int? id)
         {
             if (id == null || id == 0)
@@ -36,6 +37,7 @@ namespace MySpendings.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(Category category)
         {
@@ -55,6 +57,7 @@ namespace MySpendings.Web.Controllers
         }
 
         #region API CALLS
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             var category = await _unitOfWork.Category.GetFirstOrDefaultAsync(p => p.Id == id);

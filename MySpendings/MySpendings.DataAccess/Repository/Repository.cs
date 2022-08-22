@@ -21,6 +21,18 @@ namespace MySpendings.DataAccess.Repository
             await _dbSet.AddAsync(entity);
         }
 
+        public async Task<IEnumerable<T>> GetAllByAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        {
+            IQueryable<T> query = _dbSet;
+            query = query.Where(filter);
+            if (includeProperties != null)
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    query = query.Include(property);
+            }
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
         {
             IQueryable<T> query = _dbSet;
