@@ -77,16 +77,11 @@ namespace MySpendings.DataAccess.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Outlays");
                 });
@@ -126,7 +121,68 @@ namespace MySpendings.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MySpendings.Models.UserCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserCategories");
+                });
+
+            modelBuilder.Entity("MySpendings.Models.UserOutlay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("OutlayId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("OutlayId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserOutlays");
+                });
+
             modelBuilder.Entity("MySpendings.Models.Outlay", b =>
+                {
+                    b.HasOne("MySpendings.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("MySpendings.Models.UserCategory", b =>
                 {
                     b.HasOne("MySpendings.Models.Category", "Category")
                         .WithMany()
@@ -141,6 +197,25 @@ namespace MySpendings.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MySpendings.Models.UserOutlay", b =>
+                {
+                    b.HasOne("MySpendings.Models.Outlay", "Outlay")
+                        .WithMany()
+                        .HasForeignKey("OutlayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MySpendings.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Outlay");
 
                     b.Navigation("User");
                 });

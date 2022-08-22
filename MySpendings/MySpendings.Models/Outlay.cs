@@ -19,9 +19,5 @@ namespace MySpendings.Models
 
         [ValidateNever]
         public Category Category { get; set; }
-        public int UserId { get; set; }
-
-        [ValidateNever]
-        public User User { get; set; }
     }
 }

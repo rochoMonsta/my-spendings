@@ -12,7 +12,6 @@ namespace MySpendings.DataAccess.Data.Configurations
             builder.HasIndex(outlay => outlay.Id);
             builder.Property(outlay => outlay.Name).IsRequired().HasMaxLength(30);
             builder.Property(outlay => outlay.CategoryId).IsRequired();
-            builder.Property(outlay => outlay.UserId).IsRequired();
             builder.Property(outlay => outlay.CreatedDate).IsRequired();
             builder.Property(outlay => outlay.Cost).IsRequired();
             builder.Property(outlay => outlay.Description).HasMaxLength(250);

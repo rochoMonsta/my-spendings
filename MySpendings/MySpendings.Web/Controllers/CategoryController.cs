@@ -17,7 +17,15 @@ namespace MySpendings.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var categories = await _unitOfWork.Category.GetAllAsync();
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            if (currentUser == null)
+                return RedirectToAction("Login", controllerName: "Account");
+
+            var userCategories = await _unitOfWork.UserCategory
+                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Category");
+
+            var categories = userCategories.Select(x => x.Category);
             return View(categories);
         }
 
@@ -31,7 +39,8 @@ namespace MySpendings.Web.Controllers
             }
             else
             {
-                var category = await _unitOfWork.Category.GetFirstOrDefaultAsync(c => c.Id == id);
+                var category = await _unitOfWork.Category
+                    .GetFirstOrDefaultAsync(c => c.Id == id);
                 return View(category);
             }
         }
@@ -43,10 +52,20 @@ namespace MySpendings.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var currentUser = await _unitOfWork.User
+                    .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+                if (currentUser == null)
+                    return RedirectToAction("Login", controllerName: "Account");
+
                 TempData["Success"] = category.Id == 0 ? "Category created seccessfully" : "Category edited seccessfully";
 
                 if (category.Id == 0)
+                {
                     await _unitOfWork.Category.AddAsync(category);
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.UserCategory
+                        .AddAsync(new UserCategory() { CategoryId = category.Id, UserId = currentUser.Id });
+                }
                 else
                     _unitOfWork.Category.Update(category);
 

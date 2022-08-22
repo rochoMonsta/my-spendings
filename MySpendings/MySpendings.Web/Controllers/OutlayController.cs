@@ -19,31 +19,44 @@ namespace MySpendings.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var currentUser = await _unitOfWork.User.GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
 
             if (currentUser == null)
                 return RedirectToAction("Login", controllerName: "Account");
 
-            var outlays = await _unitOfWork.Outlay.GetAllByAsync(o => o.UserId == currentUser.Id, includeProperties: "Category");
+            var userOutlays = await _unitOfWork.UserOutlay
+                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Outlay");
+
+            List<Outlay> outlays = new List<Outlay>();
+            foreach (var userOutlay in userOutlays)
+                outlays.Add(await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == userOutlay.OutlayId, includeProperties: "Category"));
+            
             return View(outlays);
         }
 
         [Authorize]
         public async Task<IActionResult> Upsert(int? id)
         {
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            if (currentUser == null)
+                return RedirectToAction("Login", controllerName: "Account");
+
             var outlayViewModel = new OutlayViewModel()
             {
                 Outlay = new Outlay() { CreatedDate = DateTimeOffset.Now }
             };
 
             UpdateMinMaxDate(outlayViewModel);
-            await UpdateOutlayCategories(outlayViewModel);
+            await UpdateOutlayCategories(outlayViewModel, currentUser.Id);
 
             if (id == null || id == 0)
                 return View(outlayViewModel);
             else
             {
-                outlayViewModel.Outlay = await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == id);
+                outlayViewModel.Outlay = await _unitOfWork.Outlay
+                    .GetFirstOrDefaultAsync(c => c.Id == id);
                 return View(outlayViewModel);
             }
         }
@@ -53,19 +66,22 @@ namespace MySpendings.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(OutlayViewModel outlayViewModel)
         {
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            if (currentUser == null)
+                return RedirectToAction("Login", controllerName: "Account");
+
             if (ModelState.IsValid)
             {
-                var currentUser = await _unitOfWork.User.GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
-
-                if (currentUser == null)
-                    return RedirectToAction("Login", controllerName: "Account");
-
-                outlayViewModel.Outlay.UserId = currentUser.Id;
-
                 TempData["Success"] = outlayViewModel.Outlay.Id == 0 ? "Outlay created seccessfully" : "Outlay edited seccessfully";
 
                 if (outlayViewModel.Outlay.Id == 0)
+                {
                     await _unitOfWork.Outlay.AddAsync(outlayViewModel.Outlay);
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.UserOutlay
+                        .AddAsync(new UserOutlay() { UserId = currentUser.Id, OutlayId = outlayViewModel.Outlay.Id });
+                }
                 else
                     _unitOfWork.Outlay.Update(outlayViewModel.Outlay);
 
@@ -74,7 +90,7 @@ namespace MySpendings.Web.Controllers
             }
 
             UpdateMinMaxDate(outlayViewModel);
-            await UpdateOutlayCategories(outlayViewModel);
+            await UpdateOutlayCategories(outlayViewModel, currentUser.Id);
 
             return View(outlayViewModel);
         }
@@ -90,12 +106,18 @@ namespace MySpendings.Web.Controllers
             outlayViewModel.MaxDate = $"{lastDayOfMonth.Year}-{lastDayOfMonth.Month.ToString("D2")}-{lastDayOfMonth.Day.ToString("D2")}";
         }
 
-        private async Task UpdateOutlayCategories(OutlayViewModel outlayViewModel)
+        private async Task UpdateOutlayCategories(OutlayViewModel outlayViewModel, int userId)
         {
-            var categories = await _unitOfWork.Category.GetAllAsync();
-            outlayViewModel.Categories = categories.Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            var userCategories = await _unitOfWork.UserCategory
+                .GetAllByAsync(x => x.UserId == userId, includeProperties: "Category");
+
+            var categories = userCategories.Select(x => x.Category);
+
+            outlayViewModel.Categories = categories
+                .Select(c => new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
         }
         #endregion
+
         #region API CALLS
         [Authorize]
         public async Task<IActionResult> Delete(int? id)

@@ -1,4 +1,6 @@
-﻿namespace MySpendings.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace MySpendings.Models
 {
     public class User
     {

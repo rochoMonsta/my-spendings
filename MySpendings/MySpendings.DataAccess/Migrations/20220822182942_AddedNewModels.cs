@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MySpendings.DataAccess.Migrations
 {
-    public partial class AddedCategoryUserOutlayModels : Migration
+    public partial class AddedNewModels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,8 +50,7 @@ namespace MySpendings.DataAccess.Migrations
                     Cost = table.Column<float>(type: "real", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,8 +61,54 @@ namespace MySpendings.DataAccess.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Outlays_Users_UserId",
+                        name: "FK_UserCategories_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserCategories_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserOutlays",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    OutlayId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOutlays", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserOutlays_Outlays_OutlayId",
+                        column: x => x.OutlayId,
+                        principalTable: "Outlays",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserOutlays_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -86,8 +131,33 @@ namespace MySpendings.DataAccess.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Outlays_UserId",
-                table: "Outlays",
+                name: "IX_UserCategories_CategoryId",
+                table: "UserCategories",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCategories_Id",
+                table: "UserCategories",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCategories_UserId",
+                table: "UserCategories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOutlays_Id",
+                table: "UserOutlays",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOutlays_OutlayId",
+                table: "UserOutlays",
+                column: "OutlayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOutlays_UserId",
+                table: "UserOutlays",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -99,13 +169,19 @@ namespace MySpendings.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "UserCategories");
+
+            migrationBuilder.DropTable(
+                name: "UserOutlays");
+
+            migrationBuilder.DropTable(
                 name: "Outlays");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Categories");
         }
     }
 }
