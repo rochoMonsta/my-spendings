@@ -1,8 +1,96 @@
-﻿@{
+﻿@model OutlayChartViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-1">
+       
+    </div>
+    <div class="col-11">
+        <div class="border p-3 mt-4 row">
+            <div class="col-12 pb-2">
+                <h2 class="text-primary">Your Spendings</h2>
+                <hr />
+            </div>
+            <div class="mb-3 col-6">
+                <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
+            </div>
+             <div class="mb-3 col-6">
+                <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        var categories = [];
+        var categoryOutlays = [];
+        var colors = [];
+
+        setupChartSpendings();
+
+        function generateRandomColor() {
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+
+        function generateListOfColors(count){
+            let colors = [];
+            for (var i = 0; i < count; ++i){
+                colors.push(generateRandomColor());
+            }
+            return colors;
+        }
+
+        function setupChartSpendings(){
+            var result = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CategoryOutlays));
+            for (var key in result){
+                categories.push(key);
+                categoryOutlays.push(result[key]);
+            }
+            colors = generateListOfColors(Object.keys(result).length);
+            loadPieChart();
+            loadBarChart();
+            
+        }
+
+        function loadPieChart(){
+            new Chart("userCategoryOutlaysPie", {
+              type: "pie",
+              data: {
+                labels: categories,
+                datasets: [{
+                  backgroundColor: colors,
+                  data: categoryOutlays
+                }]
+              },
+              options: {
+              }
+            });
+        }
+
+        function loadBarChart(){
+            new Chart("userCategoryOutlaysBar", {
+              type: "bar",
+              data: {
+                labels: categories,
+                datasets: [{
+                  backgroundColor: colors,
+                  data: categoryOutlays
+                }]
+              },
+              options: {
+                legend: {display: false}
+              }
+            });
+        }
+    </script>
+}
