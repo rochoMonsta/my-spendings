@@ -4,25 +4,46 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row">
-    <div class="col-1">
-       
-    </div>
-    <div class="col-11">
-        <div class="border p-3 mt-4 row">
-            <div class="col-12 pb-2">
-                <h2 class="text-primary">Your Spendings</h2>
-                <hr />
+<form method="post">
+    <div class="row">
+        <div class="col-3">
+           <div class="p-3 mt-4 row">
+                <div class="col-12 mb-3 pb-2">
+                    <h2 class="text-primary">Filters</h2>
+                    <hr/>
+                </div>
+                <h5>Categories</h5>
+                <div class="mb-3">
+                    <ul class="scrollBar">
+                        @foreach (var categoryName in Model.CategoryOutlays.Keys)
+                        {
+                            <div>
+                                <input type="checkbox"/>
+                                <label class="text-secondary">@categoryName</label>
+                            </div>   
+                        }
+                    </ul>
+                </div>
             </div>
-            <div class="mb-3 col-6">
-                <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
-            </div>
-             <div class="mb-3 col-6">
-                <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
+        </div>
+        <div class="col-9">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">Your Spendings</h2>
+                    <hr />
+                </div>
+                <div class="mb-3 col-6">
+                    <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
+                </div>
+                 <div class="mb-3 col-6">
+                    <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
+
+
 
 @section Scripts
 {
@@ -88,7 +109,14 @@
                 }]
               },
               options: {
-                legend: {display: false}
+                legend: {display: false},
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
               }
             });
         }
