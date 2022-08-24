@@ -12,13 +12,22 @@
                     <h2 class="text-primary">Filters</h2>
                     <hr/>
                 </div>
+                <h5>Date Range</h5>
+                 <div class="mb-3">
+                    <label>Start</label>
+                    <input type="date" class="form-control"/>
+                </div>
+                 <div class="mb-3">
+                    <label>End</label>
+                    <input type="date" class="form-control"/>
+                </div>
                 <h5>Categories</h5>
                 <div class="mb-3">
                     <ul class="scrollBar">
                         @foreach (var categoryName in Model.CategoryOutlays.Keys)
                         {
                             <div>
-                                <input type="checkbox"/>
+                                <input type="checkbox" id="@categoryName" onchange="categoryOnChanged(this)" checked/>
                                 <label class="text-secondary">@categoryName</label>
                             </div>   
                         }
@@ -28,16 +37,44 @@
         </div>
         <div class="col-9">
             <div class="border p-3 mt-4 row">
-                <div class="col-12 pb-2">
-                    <h2 class="text-primary">Your Spendings</h2>
-                    <hr />
+                <div class="row pt-4">
+                    <div class="col-6">
+                        <h2 class="text-primary">Your Spendings</h2>
+                    </div>
+                    <div class="col-6 text-end">
+                        <h2 class="text-secondary">@Model.OutlaysData</h2>
+                    </div>
                 </div>
+                <hr />
                 <div class="mb-3 col-6">
                     <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
                 </div>
                  <div class="mb-3 col-6">
                     <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
                 </div>
+                <div class="container p-3 my-custom-scrollbar table-wrapper-scroll-y">
+                <table class="table table-bordered table-striped table-scrollbar" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th> Name </th>
+                            <th class="text-center"> Cost </th>
+                            <th class="text-center"> Category </th>
+                            <th class="text-center"> Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var outlay in Model.Outlays)
+                        {
+                            <tr>
+                                <td> @outlay.Name </td>
+                                <td class="text-center"> @outlay.Cost.ToString("c") </td>
+                                <td class="text-center"> @outlay.Category.Name </td>
+                                <td class="text-center"> @outlay.CreatedDate.ToString("MM/dd/yyyy") </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
             </div>
         </div>
     </div>
@@ -51,6 +88,12 @@
         var categories = [];
         var categoryOutlays = [];
         var colors = [];
+
+        var removedCategories = [];
+        var removedOutlays = [];
+
+        var pieChart;
+        var barChart;
 
         setupChartSpendings();
 
@@ -84,7 +127,7 @@
         }
 
         function loadPieChart(){
-            new Chart("userCategoryOutlaysPie", {
+            pieChart = new Chart("userCategoryOutlaysPie", {
               type: "pie",
               data: {
                 labels: categories,
@@ -99,7 +142,7 @@
         }
 
         function loadBarChart(){
-            new Chart("userCategoryOutlaysBar", {
+            barChart = new Chart("userCategoryOutlaysBar", {
               type: "bar",
               data: {
                 labels: categories,
@@ -119,6 +162,41 @@
             }
               }
             });
+        }
+
+        function destroyCharts(){
+            pieChart.destroy();
+            barChart.destroy();
+        }
+
+        function categoryOnChanged(checkbox){
+            if($(checkbox).is(":checked")){
+                var removedCategory = removedCategories.indexOf(checkbox.id);
+                if (removedCategory != -1){
+                    categories.push(removedCategories[removedCategory]);
+                    categoryOutlays.push(removedOutlays[removedCategory]);
+
+                    removedCategories.splice(removedCategory, 1);
+                    removedOutlays.splice(removedCategory, 1);
+
+                    destroyCharts();
+                    loadPieChart();
+                    loadBarChart();
+                }
+            }else{
+                var categoryIndex = categories.indexOf(checkbox.id);
+                if (categoryIndex != -1){
+                    removedCategories.push(categories[categoryIndex]);
+                    removedOutlays.push(categoryOutlays[categoryIndex]);
+
+                    categories.splice(categoryIndex, 1);
+                    categoryOutlays.splice(categoryIndex, 1);
+
+                    destroyCharts();
+                    loadPieChart();
+                    loadBarChart();
+                }
+            }
         }
     </script>
 }

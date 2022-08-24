@@ -18,8 +18,18 @@ body {
 }
 
 .scrollBar {
-    height: 200px;
+    height: 150px;
     overflow-y: auto;
     padding: 0;
     list-style-type: none;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 400px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
 }

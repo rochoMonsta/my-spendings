@@ -70,7 +70,7 @@ namespace MySpendings.Web.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 else
-                    ModelState.AddModelError("IncorrectLoginOrPassword", "Incorrect Login or Password");
+                    ModelState.AddModelError("Login", "Incorrect Login or Password");
             }
             return View(model);
         }

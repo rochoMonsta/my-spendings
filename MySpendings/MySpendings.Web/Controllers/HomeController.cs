@@ -34,7 +34,12 @@ namespace MySpendings.Web.Controllers
 
             var categorySpendings = GetCategorySpendingsDictionary(outlays);
 
-            return View(new OutlayChartViewModel() { CategoryOutlays = categorySpendings });
+            return View(new OutlayChartViewModel() 
+            { 
+                CategoryOutlays = categorySpendings, 
+                OutlaysData = DateTime.Now.ToString("yyyy MMMM"),
+                Outlays = outlays
+            });
         }
 
         [Authorize]
