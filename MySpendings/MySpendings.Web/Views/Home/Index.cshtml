@@ -37,44 +37,44 @@
         </div>
         <div class="col-9">
             <div class="border p-3 mt-4 row">
-                <div class="row pt-4">
+                <div class="row col-12 mb-3 pb-2">
                     <div class="col-6">
                         <h2 class="text-primary">Your Spendings</h2>
                     </div>
                     <div class="col-6 text-end">
                         <h2 class="text-secondary">@Model.OutlaysData</h2>
                     </div>
+                    <hr class="m-2" />
                 </div>
-                <hr />
                 <div class="mb-3 col-6">
                     <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
                 </div>
-                 <div class="mb-3 col-6">
+                <div class="mb-3 col-6">
                     <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
                 </div>
-                <div class="container p-3 my-custom-scrollbar table-wrapper-scroll-y">
-                <table class="table table-bordered table-striped table-scrollbar" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th> Name </th>
-                            <th class="text-center"> Cost </th>
-                            <th class="text-center"> Category </th>
-                            <th class="text-center"> Date </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach(var outlay in Model.Outlays)
-                        {
+                <div class="container my-custom-scrollbar table-wrapper-scroll-y">
+                    <table class="table table-bordered table-striped" style="width:100%">
+                        <thead>
                             <tr>
-                                <td> @outlay.Name </td>
-                                <td class="text-center"> @outlay.Cost.ToString("c") </td>
-                                <td class="text-center"> @outlay.Category.Name </td>
-                                <td class="text-center"> @outlay.CreatedDate.ToString("MM/dd/yyyy") </td>
+                                <th> Name </th>
+                                <th class="text-center"> Cost </th>
+                                <th class="text-center"> Category </th>
+                                <th class="text-center"> Date </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach(var outlay in Model.Outlays)
+                            {
+                                <tr>
+                                    <td> @outlay.Name </td>
+                                    <td class="text-center"> @outlay.Cost.ToString("c") </td>
+                                    <td class="text-center"> @outlay.Category.Name </td>
+                                    <td class="text-center"> @outlay.CreatedDate.ToString("MM/dd/yyyy") </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
