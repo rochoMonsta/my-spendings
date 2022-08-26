@@ -45,9 +45,17 @@ namespace MySpendings.Web.Controllers
                 CurrentMonthOutlays = currentMonthOutlays,
                 MonthList = GetMonthList(outlays),
                 YearsList = GetYearsList(outlays),
+                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays),
                 SelectedMonth = DateTime.Now.Month,
                 SelectedYear = DateTime.Now.Year,
             });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Index(OutlayChartViewModel outlayChartViewModel)
+        {
+            return null;
         }
 
         [Authorize]
@@ -93,6 +101,16 @@ namespace MySpendings.Web.Controllers
                 .Select(x => new SelectListItem() { 
                     Text = x.Key.ToString(), 
                     Value = x.Key.ToString() 
+                });
+        }
+
+        private IEnumerable<CategoryStatusViewModel> GetCategoryStatuses(IEnumerable<Outlay> outlays)
+        {
+            return outlays
+                .GroupBy(x => x.Category)
+                .Select(c => new CategoryStatusViewModel() { 
+                    Category = c.Key, 
+                    IsActive = true 
                 });
         }
         #endregion
