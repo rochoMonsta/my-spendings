@@ -15,6 +15,9 @@ namespace MySpendings.Models.ViewModels
         public IEnumerable<Outlay> CurrentMonthOutlays { get; set; }
 
         [ValidateNever]
+        public IEnumerable<CategoryStatusViewModel> CategoryStatuses { get; set; }
+
+        [ValidateNever]
         public int SelectedMonth { get; set; }
 
         [ValidateNever]
