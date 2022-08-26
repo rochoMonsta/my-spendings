@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace MySpendings.Models
 {
@@ -9,5 +10,7 @@ namespace MySpendings.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
+        public string? ImageUrl { get; set; }
+        public int Income { get; set; }
     }
 }
