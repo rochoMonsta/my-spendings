@@ -12,19 +12,21 @@
                     <h2 class="text-primary">Filters</h2>
                     <hr/>
                 </div>
-                <h5>Date Range</h5>
-                 <div class="mb-3">
-                    <label>Start</label>
-                    <input type="date" class="form-control"/>
+                <h5>Outlays Date</h5>
+                <div class="mb-3">
+                    <select asp-for="@Model.SelectedYear" asp-items="@Model.YearsList" class="form-select">
+                        <option disabled selected>--Select Year--</option>
+                    </select>
                 </div>
-                 <div class="mb-3">
-                    <label>End</label>
-                    <input type="date" class="form-control"/>
+                <div class="mb-3">
+                    <select asp-for="@Model.SelectedMonth" asp-items="@Model.MonthList" class="form-select">
+                        <option disabled selected>--Select Year--</option>
+                    </select>
                 </div>
                 <h5>Categories</h5>
                 <div class="mb-3">
                     <ul class="scrollBar">
-                        @foreach (var categoryName in Model.CategoryOutlays.Keys)
+                        @foreach (var categoryName in Model.CurrentMonthCategoryOutlays.Keys)
                         {
                             <div>
                                 <input type="checkbox" id="@categoryName" onchange="categoryOnChanged(this)" checked/>
@@ -63,7 +65,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var outlay in Model.Outlays)
+                            @foreach(var outlay in Model.CurrentMonthOutlays)
                             {
                                 <tr>
                                     <td> @outlay.Name </td>
@@ -115,7 +117,7 @@
         }
 
         function setupChartSpendings(){
-            var result = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CategoryOutlays));
+            var result = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CurrentMonthCategoryOutlays));
             for (var key in result){
                 categories.push(key);
                 categoryOutlays.push(result[key]);

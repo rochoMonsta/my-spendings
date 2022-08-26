@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MySpendings.DataAccess.Repository.IRepository;
 using MySpendings.Models;
 using MySpendings.Models.ViewModels;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace MySpendings.Web.Controllers
 {
@@ -32,13 +34,19 @@ namespace MySpendings.Web.Controllers
             foreach (var userOutlay in userOutlays)
                 outlays.Add(await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == userOutlay.OutlayId, includeProperties: "Category"));
 
-            var categorySpendings = GetCategorySpendingsDictionary(outlays);
+            var currentMonthOutlays = outlays.Where(o => 
+                o.CreatedDate.DateTime.Month == DateTime.Now.Month && 
+                o.CreatedDate.DateTime.Year == DateTime.Now.Year);
 
             return View(new OutlayChartViewModel() 
             { 
-                CategoryOutlays = categorySpendings, 
+                CurrentMonthCategoryOutlays = GetCategorySpendingsDictionary(currentMonthOutlays),
                 OutlaysData = DateTime.Now.ToString("yyyy MMMM"),
-                Outlays = outlays
+                CurrentMonthOutlays = currentMonthOutlays,
+                MonthList = GetMonthList(outlays),
+                YearsList = GetYearsList(outlays),
+                SelectedMonth = DateTime.Now.Month,
+                SelectedYear = DateTime.Now.Year,
             });
         }
 
@@ -66,6 +74,26 @@ namespace MySpendings.Web.Controllers
                 .ToDictionary(d => d.CategoryName.Name, d => d.SpendingsSum);
 
             return categorySpendings;
+        }
+
+        private IEnumerable<SelectListItem> GetMonthList(IEnumerable<Outlay> outlays)
+        {
+            return outlays
+                .GroupBy(o => o.CreatedDate.Date.Month)
+                .Select(x => new SelectListItem() { 
+                    Text = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Key), 
+                    Value = x.Key.ToString() 
+                });
+        }
+
+        private IEnumerable<SelectListItem> GetYearsList(IEnumerable<Outlay> outlays)
+        {
+            return outlays
+                .GroupBy(o => o.CreatedDate.Year)
+                .Select(x => new SelectListItem() { 
+                    Text = x.Key.ToString(), 
+                    Value = x.Key.ToString() 
+                });
         }
         #endregion
     }
