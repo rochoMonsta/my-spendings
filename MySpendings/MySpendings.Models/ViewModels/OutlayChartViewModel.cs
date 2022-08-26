@@ -28,5 +28,8 @@ namespace MySpendings.Models.ViewModels
 
         [ValidateNever]
         public IEnumerable<SelectListItem> YearsList { get; set; }
+
+        [ValidateNever]
+        public User User { get; set; }
     }
 }

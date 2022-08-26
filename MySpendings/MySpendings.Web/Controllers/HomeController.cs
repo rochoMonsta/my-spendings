@@ -48,11 +48,13 @@ namespace MySpendings.Web.Controllers
                 CategoryStatuses = GetCategoryStatuses(currentMonthOutlays),
                 SelectedMonth = DateTime.Now.Month,
                 SelectedYear = DateTime.Now.Year,
+                User = currentUser
             });
         }
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(OutlayChartViewModel outlayChartViewModel)
         {
             return null;
