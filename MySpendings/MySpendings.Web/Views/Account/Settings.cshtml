@@ -1,0 +1,64 @@
+﻿@model User
+
+@{
+    ViewData["Title"] = "Account Settings";
+}
+
+<form method="post" asp-action="Settings" enctype="multipart/form-data">
+    <input asp-for="Id" hidden />
+    <input asp-for="ImageUrl" hidden />
+
+    <div class="row">
+       
+        <div class="col-12">
+            <div class="border p-3 mt-4 row">
+                <div class="row mb-3 col-12 pb-2">
+                    <div class="col-6">
+                        <h2 class="text-primary">Profile Information</h2>
+                    </div>
+                    <div class="col-6 text-end">
+                        <h2 class="text-secondary">@Model.Name</h2>
+                    </div>
+                    <hr class="m-2" />
+                </div>
+                <div class="col-12 text-center">
+                    <img src="@Model.ImageUrl" width="200px" height="200px" style="border-radius:50%; border:5px solid #000000; object-fit: cover;"/>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                 <div class="mb-3">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Login"></label>
+                    <input asp-for="Login" class="form-control" />
+                    <span asp-validation-for="Login" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="ImageUrl"></label>
+                    <input type="file" id="uploadBox" name="file" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="Income"></label>
+                    <input asp-for="Income" class="form-control" />
+                    <span asp-validation-for="Income" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-12 text-center">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</form>

@@ -5,42 +5,49 @@
 }
 
 <form method="post">
-    <div class="border p-3 mt-4">
-        <div class="row pb-2">
-            <h2>Register on MySpendings</h2>
-            <hr/>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control"/>
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control"/>
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-         <div class="mb-3">
-            <label asp-for="Login"></label>
-            <input asp-for="Login" class="form-control"/>
-            <span asp-validation-for="Login" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control"/>
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="ConfirmPassword"></label>
-            <input asp-for="ConfirmPassword" class="form-control"/>
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-        <div class="mb-2">
-            <div class="text-center">
-                <a asp-action="Login" asp-controller="Account" class="text-info">I already have account</a>
+    <div class="col-12">
+        <div class="border p-3 mt-4 row">
+            <div class="row pb-2">
+                <h2>Register on MySpendings</h2>
+                <hr/>
             </div>
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary" style="width:150px">Register</button>
+            <div class="mb-3">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-6">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-6">
+                <label asp-for="Income"></label>
+                <input asp-for="Income" class="form-control"/>
+                <span asp-validation-for="Income" class="text-danger"></span>
+            </div>
+             <div class="mb-3">
+                <label asp-for="Login"></label>
+                <input asp-for="Login" class="form-control"/>
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control"/>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control"/>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="mb-2">
+                <div class="text-center">
+                    <a asp-action="Login" asp-controller="Account" class="text-info">I already have account</a>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary" style="width:150px">Register</button>
+                </div>
             </div>
         </div>
     </div>
