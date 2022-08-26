@@ -29,7 +29,7 @@
                         @foreach (var categoryStatus in Model.CategoryStatuses)
                         {
                             <div>
-                                <input asp-for="@categoryStatus.IsActive" type="checkbox" id="@categoryStatus.Category.Name" onchange="categoryOnChanged(this)"/>
+                                <input asp-for="@categoryStatus.IsActive" type="checkbox" id="@categoryStatus.Category.Name"/>
                                 <label class="text-secondary">@categoryStatus.Category.Name</label>
                             </div>   
                         }
@@ -97,12 +97,6 @@
         var categoryOutlays = [];
         var colors = [];
 
-        //var removedCategories = [];
-        //var removedOutlays = [];
-
-        //var pieChart;
-        //var barChart;
-
         setupChartSpendings();
 
         function generateRandomColor() {
@@ -131,7 +125,6 @@
             colors = generateListOfColors(Object.keys(result).length);
             loadPieChart();
             loadBarChart();
-            
         }
 
         function loadPieChart(){
@@ -171,40 +164,5 @@
               }
             });
         }
-
-        //function destroyCharts(){
-        //    pieChart.destroy();
-        //    barChart.destroy();
-        //}
-
-        //function categoryOnChanged(checkbox){
-        //    if($(checkbox).is(":checked")){
-        //        var removedCategory = removedCategories.indexOf(checkbox.id);
-        //        if (removedCategory != -1){
-        //            categories.push(removedCategories[removedCategory]);
-        //            categoryOutlays.push(removedOutlays[removedCategory]);
-
-        //            removedCategories.splice(removedCategory, 1);
-        //            removedOutlays.splice(removedCategory, 1);
-
-        //            destroyCharts();
-        //            loadPieChart();
-        //            loadBarChart();
-        //        }
-        //    }else{
-        //        var categoryIndex = categories.indexOf(checkbox.id);
-        //        if (categoryIndex != -1){
-        //            removedCategories.push(categories[categoryIndex]);
-        //            removedOutlays.push(categoryOutlays[categoryIndex]);
-
-        //            categories.splice(categoryIndex, 1);
-        //            categoryOutlays.splice(categoryIndex, 1);
-
-        //            destroyCharts();
-        //            loadPieChart();
-        //            loadBarChart();
-        //        }
-        //    }
-        //}
     </script>
 }

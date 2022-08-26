@@ -7,6 +7,7 @@ namespace MySpendings.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
         [Range(0, 1000000)]
         public float Cost { get; set; }
         public string? Description { get; set; }
