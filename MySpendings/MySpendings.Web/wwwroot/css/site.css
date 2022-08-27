@@ -18,7 +18,7 @@ body {
 }
 
 .scrollBar {
-    height: 100px;
+    height: 150px;
     overflow-y: auto;
     padding: 0;
     list-style-type: none;
