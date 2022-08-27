@@ -65,7 +65,6 @@ else
                         <div class="col-6 text-end">
                             <h2 class="text-secondary">@Model.OutlaysData</h2>
                         </div>
-                        <hr class="m-2" />
                     </div>
                     <div class="mb-3 col-6">
                         <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
@@ -73,7 +72,7 @@ else
                     <div class="mb-3 col-6">
                         <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
                     </div>
-                    <div class="container my-custom-scrollbar table-wrapper-scroll-y">
+                    <div class="container my-custom-scrollbar table-wrapper-scroll-y mb-4">
                         <table class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
@@ -95,6 +94,9 @@ else
                                 }
                             </tbody>
                         </table>
+                    </div>
+                    <div class="row col-12">
+                        <h2 class="col-12 text-end text-primary">@($"{Model.User.Income} - {Model.CurrentMonthOutlays.Sum(x => x.Cost)} = {Model.User.Income - Model.CurrentMonthOutlays.Sum(x => x.Cost)}")</h2>
                     </div>
                 </div>
             </div>
