@@ -150,5 +150,28 @@ namespace MySpendings.Web.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
         #endregion
+
+        #region API CALLS
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var user = await _unitOfWork.User.GetFirstOrDefaultAsync(p => p.Id == id);
+            if (user == null)
+                return Json(new { success = false, message = "Error while deleting" });
+
+            var userOutlays = await _unitOfWork.UserOutlay.GetAllByAsync(x => x.UserId == user.Id, includeProperties: "Outlay");
+            foreach (var userOutlay in userOutlays)
+                _unitOfWork.Outlay.Remove(userOutlay.Outlay);
+
+            var userCategories = await _unitOfWork.UserCategory.GetAllByAsync(x => x.UserId == user.Id, includeProperties: "Category");
+            foreach (var userCategory in userCategories)
+                _unitOfWork.Category.Remove(userCategory.Category);
+
+            _unitOfWork.User.Remove(user);
+            await _unitOfWork.SaveAsync();
+            await Logout();
+            return Json(new { success = true, message = "Delete Successful" });
+        }
+        #endregion
     }
 }

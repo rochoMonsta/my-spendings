@@ -54,11 +54,14 @@
                     <span asp-validation-for="Income" class="text-danger"></span>
                 </div>
                 <div class="mb-3 col-12 text-center">
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <button type="submit" style="width:200px;" class="btn btn-primary">Update Profile</button>
+                    <a onclick="Delete('/Account/Delete?id=@Model.Id')" class="btn btn-danger" style="width:200px;">Delete Profile</a>
                 </div>
             </div>
         </div>
     </div>
-
-    
 </form>
+
+@section Scripts{
+    <script src="~/js/accountHelper.js"></script>
+}
