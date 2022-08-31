@@ -66,11 +66,8 @@ else
                             <h2 class="text-secondary">@Model.OutlaysData</h2>
                         </div>
                     </div>
-                    <div class="mb-3 col-6">
-                        <canvas id="userCategoryOutlaysPie" style="width:100%;max-width:600px"></canvas>
-                    </div>
-                    <div class="mb-3 col-6">
-                        <canvas id="userCategoryOutlaysBar" style="width:100%;max-width:600px"></canvas>
+                    <div class="mb-3 col-12">
+                        <canvas id="userCategoryOutlaysBar" style="width:100%;"></canvas>
                     </div>
                     <div class="container my-custom-scrollbar table-wrapper-scroll-y mb-4">
                         <table class="table table-bordered table-striped" style="width:100%">
@@ -139,23 +136,7 @@ else
                 categoryOutlays.push(result[key]);
             }
             colors = generateListOfColors(Object.keys(result).length);
-            loadPieChart();
             loadBarChart();
-        }
-
-        function loadPieChart(){
-            new Chart("userCategoryOutlaysPie", {
-              type: "pie",
-              data: {
-                labels: categories,
-                datasets: [{
-                  backgroundColor: colors,
-                  data: categoryOutlays
-                }]
-              },
-              options: {
-              }
-            });
         }
 
         function loadBarChart(){
@@ -171,10 +152,11 @@ else
               options: {
                 legend: {display: false},
                 scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 500
+                        }
                 }]
             }
               }
