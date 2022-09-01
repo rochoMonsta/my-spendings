@@ -8,6 +8,7 @@
 * Learned to work with **Razor pages**
 * Gained knowledge about creation **N-Tier architecture**
 * Gained knowledge about **Unit Of Work in Repository Pattern**
+* Gained knowledge about **ASP.NET Core Authentication**
 
 ## Technologies used
 * ASP.NET Core (MVC)
