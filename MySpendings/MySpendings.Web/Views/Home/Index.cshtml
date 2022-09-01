@@ -14,7 +14,8 @@
 }
 else
 {
-    <form method="post">
+   <body>
+        <form method="post">
         <div class="row">
             <div class="col-3">
                <div class="p-3 mt-4 row">
@@ -39,11 +40,11 @@ else
                     <h5>Categories</h5>
                     <div class="mb-3">
                         <ul class="scrollBar">
-                            @foreach (var categoryStatus in Model.CategoryStatuses)
+                            @for (var counter = 0; counter < Model.CategoryStatuses.Count(); ++counter)
                             {
                                 <div>
-                                    <input asp-for="@categoryStatus.IsActive" type="checkbox" id="@categoryStatus.Category.Name"/>
-                                    <label class="text-secondary">@categoryStatus.Category.Name</label>
+                                    <input asp-for="@Model.CategoryStatuses[counter].IsActive" type="checkbox" id="@Model.CategoryStatuses[counter].Category.Name"/>
+                                    <label class="text-secondary">@Model.CategoryStatuses[counter].Category.Name</label>
                                 </div>   
                             }
                         </ul>
@@ -99,6 +100,7 @@ else
             </div>
         </div>
     </form>
+   </body>
 }
 
 

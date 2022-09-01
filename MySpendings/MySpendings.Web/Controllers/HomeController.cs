@@ -42,10 +42,10 @@ namespace MySpendings.Web.Controllers
             { 
                 CurrentMonthCategoryOutlays = GetCategorySpendingsDictionary(currentMonthOutlays),
                 OutlaysData = DateTime.Now.ToString("yyyy MMMM"),
-                CurrentMonthOutlays = currentMonthOutlays,
-                MonthList = GetMonthList(outlays),
-                YearsList = GetYearsList(outlays),
-                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays),
+                CurrentMonthOutlays = currentMonthOutlays.ToList(),
+                MonthList = GetMonthList(outlays).ToList(),
+                YearsList = GetYearsList(outlays).ToList(),
+                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays).ToList(),
                 SelectedMonth = DateTime.Now.Month,
                 SelectedYear = DateTime.Now.Year,
                 User = currentUser

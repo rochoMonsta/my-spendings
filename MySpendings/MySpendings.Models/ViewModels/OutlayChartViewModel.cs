@@ -12,22 +12,22 @@ namespace MySpendings.Models.ViewModels
         public string OutlaysData { get; set; }
 
         [ValidateNever]
-        public IEnumerable<Outlay> CurrentMonthOutlays { get; set; }
+        public List<Outlay> CurrentMonthOutlays { get; set; }
 
         [ValidateNever]
-        public IEnumerable<CategoryStatusViewModel> CategoryStatuses { get; set; }
+        public List<CategoryStatusViewModel> CategoryStatuses { get; set; }
 
         [ValidateNever]
         public int SelectedMonth { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> MonthList { get; set; }
+        public List<SelectListItem> MonthList { get; set; }
 
         [ValidateNever]
         public int SelectedYear { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> YearsList { get; set; }
+        public List<SelectListItem> YearsList { get; set; }
 
         [ValidateNever]
         public User User { get; set; }
