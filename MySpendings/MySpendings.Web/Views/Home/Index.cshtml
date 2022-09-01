@@ -16,90 +16,92 @@ else
 {
    <body>
         <form method="post">
-        <div class="row">
-            <div class="col-3">
-               <div class="p-3 mt-4 row">
-                    <div class="col-12 text-center mb-3">
-                        <img src="@Model.User.ImageUrl" width="150px" height="150px" style="border-radius:50%; border:5px solid #000000; object-fit: cover;"/>
-                    </div>
-                    <div class="col-12 mb-3 pb-2">
-                        <h4 class="text-primary text-center">@Model.User.Name</h4>
-                        <hr/>
-                    </div>
-                    <h5>Outlays Date</h5>
-                    <div class="mb-3">
-                        <select asp-for="@Model.SelectedYear" asp-items="@Model.YearsList" class="form-select">
-                            <option disabled selected>--Select Year--</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <select asp-for="@Model.SelectedMonth" asp-items="@Model.MonthList" class="form-select">
-                            <option disabled selected>--Select Year--</option>
-                        </select>
-                    </div>
-                    <h5>Categories</h5>
-                    <div class="mb-3">
-                        <ul class="scrollBar">
-                            @for (var counter = 0; counter < Model.CategoryStatuses.Count(); ++counter)
-                            {
-                                <div>
-                                    <input asp-for="@Model.CategoryStatuses[counter].IsActive" type="checkbox" id="@Model.CategoryStatuses[counter].Category.Name"/>
-                                    <label class="text-secondary">@Model.CategoryStatuses[counter].Category.Name</label>
-                                </div>   
-                            }
-                        </ul>
-                    </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-primary col-12">Apply Filters</button>
-                    </div>
-                    <div>
-                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary col-12">Clear Filters</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-9">
-                <div class="border p-3 mt-4 row">
-                    <div class="row col-12 mb-3 pb-2">
-                        <div class="col-6">
-                            <h2 class="text-primary">Your Spendings</h2>
+            <input asp-for="@Model.User.Id" hidden />
+            <div class="row">
+                <div class="col-3">
+                   <div class="p-3 mt-4 row">
+                        <div class="col-12 text-center mb-3">
+                            <img src="@Model.User.ImageUrl" width="150px" height="150px" style="border-radius:50%; border:5px solid #000000; object-fit: cover;"/>
                         </div>
-                        <div class="col-6 text-end">
-                            <h2 class="text-secondary">@Model.OutlaysData</h2>
+                        <div class="col-12 mb-3 pb-2">
+                            <h4 class="text-primary text-center">@Model.User.Name</h4>
+                            <hr/>
                         </div>
-                    </div>
-                    <div class="mb-3 col-12">
-                        <canvas id="userCategoryOutlaysBar" style="width:100%;"></canvas>
-                    </div>
-                    <div class="container my-custom-scrollbar table-wrapper-scroll-y mb-4">
-                        <table class="table table-bordered table-striped" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th> Name </th>
-                                    <th class="text-center"> Cost </th>
-                                    <th class="text-center"> Category </th>
-                                    <th class="text-center"> Date </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach(var outlay in Model.CurrentMonthOutlays)
+                        <h5>Outlays Date</h5>
+                        <div class="mb-3">
+                            <select asp-for="@Model.SelectedYear" asp-items="@Model.YearsList" class="form-select">
+                                <option disabled selected>--Select Year--</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <select asp-for="@Model.SelectedMonth" asp-items="@Model.MonthList" class="form-select">
+                                <option disabled selected>--Select Year--</option>
+                            </select>
+                        </div>
+                        <h5>Categories</h5>
+                        <div class="mb-3">
+                            <ul class="scrollBar">
+                                @for (var counter = 0; counter < Model.CategoryStatuses.Count(); ++counter)
                                 {
-                                    <tr>
-                                        <td> @outlay.Name </td>
-                                        <td class="text-center"> @outlay.Cost.ToString("c") </td>
-                                        <td class="text-center"> @outlay.Category.Name </td>
-                                        <td class="text-center"> @outlay.CreatedDate.ToString("MM/dd/yyyy") </td>
-                                    </tr>
+                                    <div>
+                                        <input asp-for="@Model.CategoryStatuses[counter].CategoryId" hidden />
+                                        <input asp-for="@Model.CategoryStatuses[counter].IsActive" type="checkbox" />
+                                        <label class="text-secondary">@Model.CategoryStatuses[counter].CategoryName</label>
+                                    </div>   
                                 }
-                            </tbody>
-                        </table>
+                            </ul>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary col-12">Apply Filters</button>
+                        </div>
+                        <div>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-primary col-12">Clear Filters</a>
+                        </div>
                     </div>
-                    <div class="row col-12">
-                        <h2 class="col-12 text-end text-primary">@($"{Model.User.Income} - {Model.CurrentMonthOutlays.Sum(x => x.Cost)} = {Model.User.Income - Model.CurrentMonthOutlays.Sum(x => x.Cost)}")</h2>
+                </div>
+                <div class="col-9">
+                    <div class="border p-3 mt-4 row">
+                        <div class="row col-12 mb-3 pb-2">
+                            <div class="col-6">
+                                <h2 class="text-primary">Your Spendings</h2>
+                            </div>
+                            <div class="col-6 text-end">
+                                <h2 class="text-secondary">@Model.OutlaysData</h2>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <canvas id="userCategoryOutlaysBar" style="width:100%;"></canvas>
+                        </div>
+                        <div class="container my-custom-scrollbar table-wrapper-scroll-y mb-4">
+                            <table class="table table-bordered table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th> Name </th>
+                                        <th class="text-center"> Cost </th>
+                                        <th class="text-center"> Category </th>
+                                        <th class="text-center"> Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach(var outlay in Model.CurrentMonthOutlays)
+                                    {
+                                        <tr>
+                                            <td> @outlay.Name </td>
+                                            <td class="text-center"> @outlay.Cost.ToString("c") </td>
+                                            <td class="text-center"> @outlay.Category.Name </td>
+                                            <td class="text-center"> @outlay.CreatedDate.ToString("MM/dd/yyyy") </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row col-12">
+                            <h2 class="col-12 text-end text-primary">@($"{Model.User.Income} - {Model.CurrentMonthOutlays.Sum(x => x.Cost)} = {Model.User.Income - Model.CurrentMonthOutlays.Sum(x => x.Cost)}")</h2>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
    </body>
 }
 

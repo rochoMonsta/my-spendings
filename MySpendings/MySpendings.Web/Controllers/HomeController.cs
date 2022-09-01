@@ -27,16 +27,10 @@ namespace MySpendings.Web.Controllers
             if (currentUser == null)
                 return RedirectToAction("Login", controllerName: "Account");
 
-            var userOutlays = await _unitOfWork.UserOutlay
-                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Outlay");
+            var outlays = await GetAllUserOutlaysAsync(currentUser.Id);
+            var currentMonthOutlays = GetUserOutlaysByDate(outlays, DateTime.Now.Year, DateTime.Now.Month);
 
-            List<Outlay> outlays = new List<Outlay>();
-            foreach (var userOutlay in userOutlays)
-                outlays.Add(await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == userOutlay.OutlayId, includeProperties: "Category"));
-
-            var currentMonthOutlays = outlays.Where(o => 
-                o.CreatedDate.DateTime.Month == DateTime.Now.Month && 
-                o.CreatedDate.DateTime.Year == DateTime.Now.Year);
+            var categories = await GetUserCategoriesAsync(currentUser.Id);
 
             return View(new OutlayChartViewModel() 
             { 
@@ -45,7 +39,7 @@ namespace MySpendings.Web.Controllers
                 CurrentMonthOutlays = currentMonthOutlays.ToList(),
                 MonthList = GetMonthList(outlays).ToList(),
                 YearsList = GetYearsList(outlays).ToList(),
-                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays).ToList(),
+                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays, categories).ToList(),
                 SelectedMonth = DateTime.Now.Month,
                 SelectedYear = DateTime.Now.Year,
                 User = currentUser
@@ -55,9 +49,38 @@ namespace MySpendings.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(OutlayChartViewModel outlayChartViewModel)
+        public async Task<IActionResult> Index(OutlayChartViewModel filter)
         {
-            return null;
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+
+            if (currentUser == null)
+                return RedirectToAction("Login", controllerName: "Account");
+
+            var outlays = await GetAllUserOutlaysAsync(currentUser.Id);
+            var currentMonthUserOutlays = GetUserOutlaysByDate(outlays, filter.SelectedYear, filter.SelectedMonth);
+
+            List<Outlay> currentMonthOutlays = new List<Outlay>();
+            foreach (var userOutlay in currentMonthUserOutlays)
+            {
+                if (filter.CategoryStatuses.Where(x => x.IsActive).Any(o => o.CategoryId == userOutlay.CategoryId))
+                    currentMonthOutlays.Add(userOutlay);
+            }
+
+            var categories = await GetUserCategoriesAsync(currentUser.Id);
+
+            return View(new OutlayChartViewModel()
+            {
+                CurrentMonthCategoryOutlays = GetCategorySpendingsDictionary(currentMonthOutlays),
+                OutlaysData = new DateTime(filter.SelectedYear, filter.SelectedMonth, 1).ToString("yyyy MMMM"),
+                CurrentMonthOutlays = currentMonthOutlays.ToList(),
+                MonthList = GetMonthList(outlays).ToList(),
+                YearsList = GetYearsList(outlays).ToList(),
+                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays, categories).ToList(),
+                SelectedMonth = filter.SelectedMonth,
+                SelectedYear = filter.SelectedYear,
+                User = currentUser
+            });
         }
 
         [Authorize]
@@ -68,6 +91,29 @@ namespace MySpendings.Web.Controllers
         }
 
         #region Helpers Methods
+        private async Task<List<Outlay>> GetAllUserOutlaysAsync(int userId)
+        {
+            var userOutlays = await _unitOfWork.UserOutlay
+               .GetAllByAsync(x => x.UserId == userId, includeProperties: "Outlay");
+
+            List<Outlay> outlays = new List<Outlay>();
+            foreach (var userOutlay in userOutlays)
+                outlays.Add(await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == userOutlay.OutlayId, includeProperties: "Category"));
+
+            return outlays;
+        }
+
+        private List<Outlay> GetUserOutlaysByDate(List<Outlay> userOutlays, int year, int month)
+        {
+            return userOutlays.Where(x => x.CreatedDate.Month == month && x.CreatedDate.Year == year).ToList();
+        }
+
+        private async Task<List<Category>> GetUserCategoriesAsync(int userId)
+        {
+            var userCategories = await _unitOfWork.UserCategory.GetAllByAsync(x => x.UserId == userId, includeProperties: "Category");
+            return userCategories.Select(x => x.Category).ToList();
+        }
+
         private Dictionary<string, float> GetCategorySpendingsDictionary(IEnumerable<Outlay> outlays)
         {
             var categorySpendings = outlays
@@ -100,14 +146,22 @@ namespace MySpendings.Web.Controllers
                 });
         }
 
-        private IEnumerable<CategoryStatusViewModel> GetCategoryStatuses(IEnumerable<Outlay> outlays)
+        private IEnumerable<CategoryStatusViewModel> GetCategoryStatuses(IEnumerable<Outlay> outlays, IEnumerable<Category> categories)
         {
-            return outlays
-                .GroupBy(x => x.Category)
-                .Select(c => new CategoryStatusViewModel() { 
-                    Category = c.Key, 
-                    IsActive = true 
-                });
+            var categoryStatuses = new List<CategoryStatusViewModel>();
+            foreach (var category in categories)
+            {
+                var categoryStatus = new CategoryStatusViewModel() { CategoryId = category.Id, CategoryName = category.Name};
+
+                if (outlays.Any(o => o.CategoryId == category.Id))
+                    categoryStatus.IsActive = true;
+                else
+                    categoryStatus.IsActive = false;
+
+                categoryStatuses.Add(categoryStatus);
+
+            }
+            return categoryStatuses;
         }
         #endregion
     }
