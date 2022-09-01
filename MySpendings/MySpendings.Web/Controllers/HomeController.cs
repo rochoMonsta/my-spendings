@@ -39,7 +39,7 @@ namespace MySpendings.Web.Controllers
                 CurrentMonthOutlays = currentMonthOutlays.ToList(),
                 MonthList = GetMonthList(outlays).ToList(),
                 YearsList = GetYearsList(outlays).ToList(),
-                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays, categories).ToList(),
+                CategoryStatuses = GetCategoryStatuses(categories).ToList(),
                 SelectedMonth = DateTime.Now.Month,
                 SelectedYear = DateTime.Now.Year,
                 User = currentUser
@@ -76,7 +76,7 @@ namespace MySpendings.Web.Controllers
                 CurrentMonthOutlays = currentMonthOutlays.ToList(),
                 MonthList = GetMonthList(outlays).ToList(),
                 YearsList = GetYearsList(outlays).ToList(),
-                CategoryStatuses = GetCategoryStatuses(currentMonthOutlays, categories).ToList(),
+                CategoryStatuses = GetCategoryStatuses(categories).ToList(),
                 SelectedMonth = filter.SelectedMonth,
                 SelectedYear = filter.SelectedYear,
                 User = currentUser
@@ -146,20 +146,17 @@ namespace MySpendings.Web.Controllers
                 });
         }
 
-        private IEnumerable<CategoryStatusViewModel> GetCategoryStatuses(IEnumerable<Outlay> outlays, IEnumerable<Category> categories)
+        private IEnumerable<CategoryStatusViewModel> GetCategoryStatuses(IEnumerable<Category> categories)
         {
             var categoryStatuses = new List<CategoryStatusViewModel>();
             foreach (var category in categories)
             {
-                var categoryStatus = new CategoryStatusViewModel() { CategoryId = category.Id, CategoryName = category.Name};
-
-                if (outlays.Any(o => o.CategoryId == category.Id))
-                    categoryStatus.IsActive = true;
-                else
-                    categoryStatus.IsActive = false;
-
-                categoryStatuses.Add(categoryStatus);
-
+                categoryStatuses.Add(new CategoryStatusViewModel()
+                {
+                    CategoryId = category.Id,
+                    CategoryName = category.Name,
+                    IsActive = true
+                });
             }
             return categoryStatuses;
         }
