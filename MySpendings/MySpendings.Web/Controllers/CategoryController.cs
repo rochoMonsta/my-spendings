@@ -68,6 +68,7 @@ namespace MySpendings.Web.Controllers
 
         #region API CALLS
         [Authorize]
+        [HttpDelete]
         public async Task<IActionResult> Delete(int? id)
         {
             var category = await _unitOfWork.Category.GetFirstOrDefaultAsync(p => p.Id == id);
@@ -80,6 +81,7 @@ namespace MySpendings.Web.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var currentUser = await _unitOfWork.User
