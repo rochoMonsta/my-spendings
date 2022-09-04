@@ -18,39 +18,21 @@
 
     <br/>
 
-    <table class="table table-bordered table-striped" style="width:100%">
+    <table id="outlaysDataTable" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th> Name </th>
-                <th> Cost </th>
-                <th> Description </th>
-                <th> Category </th>
-                <th> Date </th>
+                <th class="text-center"> Cost </th>
+                <th class="text-center"> Description </th>
+                <th class="text-center"> Category </th>
+                <th class="text-center"> Date </th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
-        <tbody>
-            @foreach(var outlay in Model)
-            {
-                <tr>
-                    <td> @outlay.Name </td>
-                    <td> @outlay.Cost.ToString("c") </td>
-                    <td> @Html.Raw(outlay.Description) </td>
-                    <td> @outlay.Category.Name </td>
-                    <td> @outlay.CreatedDate.ToString("MM/dd/yyyy") </td>
-                    <td width="15%" class="text-center">
-                       <a asp-controller="Outlay" asp-action="Upsert" asp-route-id="@outlay.Id" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> &nbsp; Edit</a>
-                    </td>
-                    <td width="20%" class="text-center">
-                        <a onclick="Delete('/Outlay/Delete?id=@outlay.Id')" class="btn btn-danger mx-2"><i class="bi bi-trash"></i> &nbsp; Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
     </table>
 </div>
 
 @section Scripts{
-    <script src="~/js/outlaysHelper.js"></script>
+    <script src="~/js/outlays.js"></script>
 }

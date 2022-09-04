@@ -17,22 +17,9 @@ namespace MySpendings.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var currentUser = await _unitOfWork.User
-                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
-
-            if (currentUser == null)
-                return RedirectToAction("Login", controllerName: "Account");
-
-            var userOutlays = await _unitOfWork.UserOutlay
-                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Outlay");
-
-            List<Outlay> outlays = new List<Outlay>();
-            foreach (var userOutlay in userOutlays)
-                outlays.Add(await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == userOutlay.OutlayId, includeProperties: "Category"));
-            
-            return View(outlays);
+            return View();
         }
 
         [Authorize]
@@ -129,6 +116,24 @@ namespace MySpendings.Web.Controllers
             _unitOfWork.Outlay.Remove(outlay);
             await _unitOfWork.SaveAsync();
             return Json(new { success = true, message = "Delete Successful" });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetAll()
+        {
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+
+            if (currentUser == null)
+                return RedirectToAction("Login", controllerName: "Account");
+
+            var userOutlays = await _unitOfWork.UserOutlay
+                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Outlay");
+
+            List<Outlay> outlays = new List<Outlay>();
+            foreach (var userOutlay in userOutlays)
+                outlays.Add(await _unitOfWork.Outlay.GetFirstOrDefaultAsync(c => c.Id == userOutlay.OutlayId, includeProperties: "Category"));
+            return Json(new { data = outlays });
         }
         #endregion
     }

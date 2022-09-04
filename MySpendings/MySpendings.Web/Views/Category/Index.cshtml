@@ -18,32 +18,16 @@
 
     <br/>
 
-    <table class="table table-bordered table-striped" style="width:100%">
+    <table id="categoriesDataTable" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th> Name </th>
-                <th> Description </th>
-                <th> Priority </th>
+                <th class="text-center"> Description </th>
+                <th class="text-center"> Priority </th>
                 <th></th>
                 <th></th>
             </tr>
         </thead>
-        <tbody>
-            @foreach(var category in Model)
-            {
-                <tr>
-                    <td> @category.Name </td>
-                    <td> @Html.Raw(category.Description) </td>
-                    <td> @category.Priority </td>
-                    <td width="15%" class="text-center">
-                       <a asp-controller="Category" asp-action="Upsert" asp-route-id="@category.Id" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> &nbsp; Edit</a>
-                    </td>
-                    <td width="20%" class="text-center">
-                        <a onclick="Delete('/Category/Delete?id=@category.Id')" class="btn btn-danger mx-2"><i class="bi bi-trash"></i> &nbsp; Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
     </table>
 </div>
 

@@ -15,18 +15,9 @@ namespace MySpendings.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var currentUser = await _unitOfWork.User
-                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
-            if (currentUser == null)
-                return RedirectToAction("Login", controllerName: "Account");
-
-            var userCategories = await _unitOfWork.UserCategory
-                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Category");
-
-            var categories = userCategories.Select(x => x.Category);
-            return View(categories);
+            return View();
         }
 
         [Authorize]
@@ -86,6 +77,21 @@ namespace MySpendings.Web.Controllers
             _unitOfWork.Category.Remove(category);
             await _unitOfWork.SaveAsync();
             return Json(new { success = true, message = "Delete Successful" });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetAll()
+        {
+            var currentUser = await _unitOfWork.User
+                .GetFirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            if (currentUser == null)
+                return RedirectToAction("Login", controllerName: "Account");
+
+            var userCategories = await _unitOfWork.UserCategory
+                .GetAllByAsync(x => x.UserId == currentUser.Id, includeProperties: "Category");
+
+            var categories = userCategories.Select(x => x.Category);
+            return Json(new { data = categories });
         }
         #endregion
     }

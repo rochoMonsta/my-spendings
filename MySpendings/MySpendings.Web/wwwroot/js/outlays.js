@@ -5,26 +5,35 @@ $(document).ready(function () {
 });
 
 function loadDataTable() {
-    dataTable = $('#categoriesDataTable').DataTable({
+    dataTable = $('#outlaysDataTable').DataTable({
         "ajax": {
-            "url": "/Category/GetAll"
+            "url": "/Outlay/GetAll"
         },
         "columns": [
-            { "data": "name", "width": "20%" },
-            { "data": "description", "width": "20%", "class": "text-center" },
-            { "data": "priority", "width": "20%", "class": "text-center" },
+            { "data": "name", "width": "15%" },
+            { "data": "cost", "width": "10%", "class": "text-center" },
+            { "data": "description", "width": "15%", "class": "text-center" },
+            { "data": "category.name", "width": "15%", "class": "text-center" },
             {
-                "data": "id",
+                "data": "createdDate",
                 "render": function (data) {
-                    return `<a href="/Category/Upsert?id=${data}" class="btn btn-primary mx-2 text-center"><i class="bi bi-pencil-square"></i> &nbsp; Edit</a>`;
+                    return data.substring(0, 10);
                 },
-                "width": "20%",
+                "width": "10%",
                 "class": "text-center"
             },
             {
                 "data": "id",
                 "render": function (data) {
-                    return `<a onclick="Delete('/Category/Delete?id=${data}')" class="btn btn-danger mx-2 text-center"><i class="bi bi-trash"></i> &nbsp; Delete</a>`;
+                    return `<a href="/Outlay/Upsert?id=${data}" class="btn btn-primary mx-2 text-center"><i class="bi bi-pencil-square"></i> &nbsp; Edit</a>`;
+                },
+                "width": "15%",
+                "class": "text-center"
+            },
+            {
+                "data": "id",
+                "render": function (data) {
+                    return `<a onclick="Delete('/Outlay/Delete?id=${data}')" class="btn btn-danger mx-2 text-center"><i class="bi bi-trash"></i> &nbsp; Delete</a>`;
                 },
                 "width": "20%",
                 "class": "text-center"
