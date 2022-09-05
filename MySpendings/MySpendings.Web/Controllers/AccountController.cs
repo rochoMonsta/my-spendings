@@ -38,7 +38,8 @@ namespace MySpendings.Web.Controllers
                     await Authenticate(model.Login);
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError("IncorrectLoginOrPassword", "Incorrect Login or Password");
+                ModelState.AddModelError("Login", "Incorrect Login or Password");
+                ModelState.AddModelError("Password", "Incorrect Login or Password");
             }
             return View(model);
         }
