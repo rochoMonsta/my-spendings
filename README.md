@@ -18,6 +18,7 @@
 * [Chart.js](https://www.chartjs.org/)
 * [Bootswatch](https://bootswatch.com/)
 * [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+* [DataTables](https://datatables.net/)
 
 ## Result
 ### Home Page
